@@ -15,8 +15,9 @@ def executar_programa():
             gnre_automatico()
 
 
+
 def darj():
-    excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_selenium\icms.xlsx'
+    excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\icms.xlsx'
     df = pd.read_excel(excel)
     df['INSCRICAO'] = df['INSCRICAO'].astype(str).str.replace('\.0', '', regex=True)
     #df = df.round(2)
@@ -40,7 +41,7 @@ def darj():
 
 
 def darj_difal():
-    excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_selenium\icms.xlsx'
+    excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\icms.xlsx'
     df = pd.read_excel(excel)
     df['INSCRICAO'] = df['INSCRICAO'].astype(str).str.replace('\.0', '', regex=True)
     #df = df.round(2)

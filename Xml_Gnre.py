@@ -48,7 +48,7 @@ def gnre_automatico():
 
     data = input("Data de Pagamento: ")
     
-    arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj_selenium\RelatorioPgtoSubsTrib.xls'
+    arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
     df = pd.read_excel(arquivo)
     print('\nArquivo Excel lido...\n')
     
@@ -58,7 +58,7 @@ def gnre_automatico():
         print(user_agent)
 
         options = Options()
-        preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj_selenium\download'}
+        preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\download'}
         options.add_experimental_option("prefs", preferences)
         options.add_argument(f'--user-agent={user_agent}')
         #options.add_argument("--headless")

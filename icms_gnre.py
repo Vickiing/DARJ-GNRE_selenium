@@ -65,7 +65,7 @@ def gnre_automatico():
         select.select_by_value('100099')
 
         sleep(3)
-gnre_automatico()
+#gnre_automatico()
 
 
 
