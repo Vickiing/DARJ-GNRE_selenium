@@ -1,10 +1,11 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.select import Select
 from time import sleep
 import pyautogui as pg
 import datetime
+import pandas as pd
 
 """
 Data de Pagamento lojas = dia 05
@@ -130,6 +131,10 @@ def darj_automatico(cnpj, loja, icms, fecp):
     pg.typewrite(str(cnpj), interval=0.2)
     c_botao_confirmar = driver.find_element(By.XPATH, '//*[@id="btnConfirmar"]').click()
     sleep(2)
+
+    tipo_apuracao = driver.find_element(By.XPATH, '//*[@id="rdgPorOperacao"]').click()
+    sleep(2)
+
     c_periodo_ref = driver.find_element(By.XPATH, '//*[@id="txtPeriodoReferencia"]').click()
     pg.typewrite('03/2024', interval=0.2)
     pg.press('enter')
@@ -173,3 +178,97 @@ def darj_automatico(cnpj, loja, icms, fecp):
     #    print('Encerrando em 5 segundos...')
     #    sleep(5)
     driver.quit()
+
+
+def darj_automatico_diario():
+    arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
+    df = pd.read_excel(arquivo)
+
+    for index, row in df.iterrows():
+        tipo = row['Tipo']
+        nota_fiscal = row['Nota Fiscal']
+        serie = row['Série']
+        serie_formatada = '{:.0f}'.format(serie)
+        cnpj_fornecedor = row['CNPJ Fornecedor']
+        cnpj_destino = row['CNPJ Destino']
+        loja = row['Cod. Destino']
+        icms = row['Valor Principal']
+        fecp = row['Valor Fecp']
+        if tipo == 'D':
+            print("Iniciando o processo de DARJ: ",nota_fiscal, cnpj_destino, loja, icms, fecp)
+
+            url = r'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/br/gov/rj/sef/gct/web/emitirdocumentoarrecadacao/begin.do'
+            service = Service(executable_path="chromedriver.exe")
+            driver = webdriver.Chrome(service=service)
+            driver.get(url)
+            sleep(10)
+            c_tipo_pagamento = Select(driver.find_element(By.XPATH, '//*[@id="tipoPagamentoLista"]'))
+            c_tipo_pagamento.select_by_value('1')
+            sleep(2)
+            c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
+            sleep(5)
+            c_data = driver.find_element(By.XPATH, '//*[@id="txtDataPagamento"]').send_keys('15/04/2024')
+            c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
+            sleep(5)
+            c_natureza = Select(driver.find_element(By.XPATH, '//*[@id="slcNaturezaLista"]'))
+            c_natureza.select_by_value('4')
+            sleep(3)
+
+            select_produto = Select(driver.find_element(By.XPATH, '//*[@id="slcListaProduto"]'))
+            select_produto.select_by_value('698')#outros
+
+            c_cnpj = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpf"]').send_keys(str(cnpj_destino))
+            sleep(2)
+            c_botao_confirmar = driver.find_element(By.XPATH, '//*[@id="btnConfirmar"]').click()
+            sleep(2)
+            tipo_apuracao = driver.find_element(By.XPATH, '//*[@id="rdgPorOperacao"]').click()
+            sleep(2)
+            numero_nota = driver.find_element(By.XPATH, '//*[@id="txtNotaFiscal"]')
+            sleep(5)
+            numero_nota.send_keys(nota_fiscal)
+            serie_nf = driver.find_element(By.XPATH, '//*[@id="txtSerieNf"]').send_keys(serie_formatada)
+            c_tipo = Select(driver.find_element(By.XPATH, '//*[@id="slcTipoNf"]'))
+            c_tipo.select_by_value("NF-e")
+            sleep(2)
+            data_emissao = driver.find_element(By.XPATH, '//*[@id="txtDataNf"]').send_keys('15/04/2024')
+            sleep(1)
+            cnpj_emitente = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpfNf"]').send_keys(cnpj_fornecedor)
+
+            botao_data = driver.find_element(By.XPATH, '//*[@id="btnAlterarData"]').click()
+            sleep(2)
+            driver.find_element(By.XPATH,'//*[@id="txtDataVencimento"]').send_keys('15/04/2024')
+
+            sleep(2)
+            info_complementares = driver.find_element(By.XPATH, '//*[@id="txtJustificativa"]').click()
+            pg.typewrite(f'LOJA:{loja}', interval=0.2)
+            sleep(3)
+
+            #campo valores
+            icms_informado = driver.find_element(By.XPATH, '//*[@id="txtIcmsInformado"]').click()
+            pg.typewrite(str(icms), interval=0.2)
+            botao_ok_1 = driver.find_element(By.XPATH, '//*[@id="okIcms"]').click()
+
+            fecp_informado = driver.find_element(By.XPATH, '//*[@id="txtFecpInformado"]').click()
+            pg.typewrite(str(fecp), interval=0.2)
+            botao_ok_2 = driver.find_element(By.XPATH, '//*[@id="okFecp"]').click()
+            #fim
+            confirmar_item = driver.find_element(By.XPATH, '//*[@id="formulario"]/fieldset[2]/div[3]/input[1]').click()
+            sleep(5)
+
+            #****Faze experimental****
+            botao_gerar_darj = driver.find_element(By.XPATH, '//*[@id="boxResumo_botoes2"]/input').click()
+            sleep(20)
+            #tela de download
+            pg.hotkey('ctrl', 's')
+            sleep(5)
+            #pg.typewrite(f'LOJA {loja}', interval=0.2)
+            pg.press('enter')
+            sleep(5)
+            #sair = input('Pressione enter para sair')
+            #if sair == None or sair == '':
+            #    driver.quit()
+            #    print('driver encerrado')
+            #else:
+            #    print('Encerrando em 5 segundos...')
+            #    sleep(5)
+            driver.quit()

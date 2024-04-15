@@ -1,9 +1,9 @@
 import pandas as pd
-from icms_darj import darj_automatico, darj_automatico_difal
+from icms_darj import darj_automatico, darj_automatico_difal, darj_automatico_diario
 from Xml_Gnre import gnre_automatico
 
 def executar_programa():
-    print('Escolha a opção desejada: \n1 - DARJ\n2 - DARJ DIFAL\n3 - GNRE')
+    print('Escolha a opção desejada: \n1 - DARJ\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO')
     opcao = int(input('Opção: '))
 
     match opcao:
@@ -13,6 +13,8 @@ def executar_programa():
             darj_difal()
         case 3:
             gnre_automatico()
+        case 4:
+            darj_diario()
 
 
 
@@ -62,5 +64,10 @@ def darj_difal():
             darj_automatico_difal(cnpj, loja, icms_formatado, fecp_formatado)
         else:
             print(f"Loja: {loja}  não encontrada.")
+
+
+def darj_diario():
+    #data = input('Infome a data de emissaão do DARJ (formato dd/mm/aaaa): ')
+    darj_automatico_diario()
 
 executar_programa()

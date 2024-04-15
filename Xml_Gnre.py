@@ -107,6 +107,7 @@ def gnre_automatico():
         select.select_by_visible_text(xml_data.mun.upper())
         cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').click()
         pg.press('backspace', presses=8)
+        sleep(3)
         cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').send_keys(str(xml_data.cep))
         receita_tipo = driver.find_element(By.XPATH, '//*[@id="receita"]')
         select = Select(receita_tipo)
@@ -135,7 +136,8 @@ def gnre_automatico():
         insc_uf_favorecida = driver.find_element(By.XPATH, '//*[@id="optInscritoDest"]').click()
         inscricao_estadual = driver.find_element(By.XPATH, '//*[@id="inscricaoEstadualDestinatario"]').click()
         ins_estadual = df[df['Chave'] == xml_data.chave]['Insc. Estadual Dest.'].iloc[0]
-        pg.typewrite(str(ins_estadual), interval=0.1)
+        ins_estadual_formatada = '{:.0f}'.format(ins_estadual)
+        pg.typewrite(str(ins_estadual_formatada), interval=0.1)
 
         data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').click()
         pg.press('backspace', presses=8)
