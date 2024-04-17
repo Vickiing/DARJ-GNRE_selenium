@@ -6,6 +6,8 @@ from time import sleep
 import pyautogui as pg
 import datetime
 import pandas as pd
+import datetime
+
 
 """
 Data de Pagamento lojas = dia 05
@@ -181,6 +183,10 @@ def darj_automatico(cnpj, loja, icms, fecp):
 
 
 def darj_automatico_diario():
+    data_atual = datetime.date.today()
+    data_formatada = data_atual.strftime('%d/%m/%Y')
+    
+
     arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
     df = pd.read_excel(arquivo)
 
@@ -189,13 +195,14 @@ def darj_automatico_diario():
         nota_fiscal = row['Nota Fiscal']
         serie = row['Série']
         serie_formatada = '{:.0f}'.format(serie)
-        cnpj_fornecedor = row['CNPJ Fornecedor']
+        cnpj_fornecedor = str(row['CNPJ Fornecedor']).zfill(14)
         cnpj_destino = row['CNPJ Destino']
         loja = row['Cod. Destino']
         icms = row['Valor Principal']
         fecp = row['Valor Fecp']
+
         if tipo == 'D':
-            print("Iniciando o processo de DARJ: ",nota_fiscal, cnpj_destino, loja, icms, fecp)
+            print("Iniciando o processo de DARJ: ",nota_fiscal, cnpj_destino, str(cnpj_fornecedor), loja, icms, fecp, data_formatada)
 
             url = r'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/br/gov/rj/sef/gct/web/emitirdocumentoarrecadacao/begin.do'
             service = Service(executable_path="chromedriver.exe")
@@ -206,10 +213,10 @@ def darj_automatico_diario():
             c_tipo_pagamento.select_by_value('1')
             sleep(2)
             c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
-            sleep(5)
-            c_data = driver.find_element(By.XPATH, '//*[@id="txtDataPagamento"]').send_keys('15/04/2024')
+            sleep(2)
+            c_data = driver.find_element(By.XPATH, '//*[@id="txtDataPagamento"]').send_keys(data_formatada)
             c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
-            sleep(5)
+            sleep(2)
             c_natureza = Select(driver.find_element(By.XPATH, '//*[@id="slcNaturezaLista"]'))
             c_natureza.select_by_value('4')
             sleep(3)
@@ -230,13 +237,13 @@ def darj_automatico_diario():
             c_tipo = Select(driver.find_element(By.XPATH, '//*[@id="slcTipoNf"]'))
             c_tipo.select_by_value("NF-e")
             sleep(2)
-            data_emissao = driver.find_element(By.XPATH, '//*[@id="txtDataNf"]').send_keys('15/04/2024')
+            data_emissao = driver.find_element(By.XPATH, '//*[@id="txtDataNf"]').send_keys(data_formatada)
             sleep(1)
             cnpj_emitente = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpfNf"]').send_keys(cnpj_fornecedor)
 
             botao_data = driver.find_element(By.XPATH, '//*[@id="btnAlterarData"]').click()
             sleep(2)
-            driver.find_element(By.XPATH,'//*[@id="txtDataVencimento"]').send_keys('15/04/2024')
+            driver.find_element(By.XPATH,'//*[@id="txtDataVencimento"]').send_keys(data_formatada)
 
             sleep(2)
             info_complementares = driver.find_element(By.XPATH, '//*[@id="txtJustificativa"]').click()

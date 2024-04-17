@@ -1,9 +1,10 @@
 import pandas as pd
 from icms_darj import darj_automatico, darj_automatico_difal, darj_automatico_diario
 from Xml_Gnre import gnre_automatico
+from download_script.script import baixar_xml
 
 def executar_programa():
-    print('Escolha a opção desejada: \n1 - DARJ\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO')
+    print('Escolha a opção desejada: \n1 - DARJ\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE')
     opcao = int(input('Opção: '))
 
     match opcao:
@@ -15,6 +16,8 @@ def executar_programa():
             gnre_automatico()
         case 4:
             darj_diario()
+        case 5:
+            baixar_xml()
 
 
 

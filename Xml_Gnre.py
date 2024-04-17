@@ -150,10 +150,10 @@ def gnre_automatico():
         
         botao_validar = driver.find_element(By.XPATH, '//*[@id="validar"]').click()
         sleep(15)
-        print('\nBaixando xml...\n')
+        print('\nBaixando documento...\n')
         baixar = driver.find_element(By.XPATH, '//*[@id="baixar"]').click()
         sleep(10)
-        print('XML baixado com sucesso!')
+        print('Docmento GNRE baixado com sucesso!')
         driver.quit()
 
 
