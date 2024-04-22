@@ -252,11 +252,11 @@ def darj_automatico_diario():
 
             #campo valores
             icms_informado = driver.find_element(By.XPATH, '//*[@id="txtIcmsInformado"]').click()
-            pg.typewrite(str(icms), interval=0.2)
+            pg.typewrite(str('{:.2f}'.format(icms)), interval=0.2)
             botao_ok_1 = driver.find_element(By.XPATH, '//*[@id="okIcms"]').click()
 
             fecp_informado = driver.find_element(By.XPATH, '//*[@id="txtFecpInformado"]').click()
-            pg.typewrite(str(fecp), interval=0.2)
+            pg.typewrite(str('{:.2f}'.format(fecp)), interval=0.2)
             botao_ok_2 = driver.find_element(By.XPATH, '//*[@id="okFecp"]').click()
             #fim
             confirmar_item = driver.find_element(By.XPATH, '//*[@id="formulario"]/fieldset[2]/div[3]/input[1]').click()
