@@ -125,13 +125,13 @@ def gnre_automatico():
 
         valor_principal = driver.find_element(By.XPATH, '//*[@id="valor"]').click()
         valor_principal_digitado = df[df['Chave'] == xml_data.chave]['Valor Principal'].iloc[0]
-        pg.typewrite(str(valor_principal_digitado), interval=0.1)
+        pg.typewrite(str('{:.2f}'.format(valor_principal_digitado)), interval=0.1)
 
         #print(f'Valor Principal: {valor_principal_digitado} - xml_data.chave: {xml_data.chave}')
 
         valor_fecp = driver.find_element(By.XPATH, '//*[@id="valorFecp"]').click()
         valor_fecp_digitado = df[df['Chave'] == xml_data.chave]['Valor Fecp'].iloc[0]
-        pg.typewrite(str(valor_fecp_digitado), interval=0.1)
+        pg.typewrite(str('{:.2f}'.format(valor_fecp_digitado)), interval=0.1)
 
         insc_uf_favorecida = driver.find_element(By.XPATH, '//*[@id="optInscritoDest"]').click()
         inscricao_estadual = driver.find_element(By.XPATH, '//*[@id="inscricaoEstadualDestinatario"]').click()
