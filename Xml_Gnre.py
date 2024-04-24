@@ -7,10 +7,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 import xml.dom.minidom
 from time import sleep
+from datetime import date
 import pyautogui as pg
 import pandas as pd
 import os
 from fake_useragent import UserAgent
+
 
 class XML:
     def __init__(self):
@@ -43,10 +45,13 @@ def xml_leitor(xml_arquivo):
         print("Erro ao processar XML:", e)
         return None  # Retorna None em caso de erro
 
-# Exemplo de utilização da função e da classe:
-def gnre_automatico():
 
-    data = input("Data de Pagamento: ")
+def gnre_automatico():
+    
+    #Calculo da data de emissaão
+    data_pagamento_lojas = date.today()
+    day = data_pagamento_lojas.strftime('%d/%m/%Y')
+    #data = input("Data de Pagamento: ")
     
     arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
     df = pd.read_excel(arquivo)
@@ -120,14 +125,11 @@ def gnre_automatico():
         numero_doc_origem = driver.find_element(By.XPATH, '//*[@id="numeroDocumentoOrigem"]').send_keys(str(xml_data.chave))
         data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').click()
         pg.press('backspace', presses=8)
-        #pg.typewrite(data, interval=0.2)
-        data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').send_keys(str(data))
+        data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').send_keys(str(day))
 
         valor_principal = driver.find_element(By.XPATH, '//*[@id="valor"]').click()
         valor_principal_digitado = df[df['Chave'] == xml_data.chave]['Valor Principal'].iloc[0]
         pg.typewrite(str('{:.2f}'.format(valor_principal_digitado)), interval=0.1)
-
-        #print(f'Valor Principal: {valor_principal_digitado} - xml_data.chave: {xml_data.chave}')
 
         valor_fecp = driver.find_element(By.XPATH, '//*[@id="valorFecp"]').click()
         valor_fecp_digitado = df[df['Chave'] == xml_data.chave]['Valor Fecp'].iloc[0]
@@ -141,8 +143,7 @@ def gnre_automatico():
 
         data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').click()
         pg.press('backspace', presses=8)
-        #pg.typewrite(data, interval=0.2)
-        data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').send_keys(str(data))
+        data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').send_keys(str(day))
 
         loja = df[df['Chave'] == xml_data.chave]['Cod. Destino'].iloc[0]
         info_complementares = driver.find_element(By.XPATH, '//*[@id="campoAdicional01"]').click()

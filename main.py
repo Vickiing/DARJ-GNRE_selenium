@@ -3,6 +3,8 @@ from icms_darj import darj_automatico, darj_automatico_difal, darj_automatico_di
 from Xml_Gnre import gnre_automatico
 from download_script.script import baixar_xml
 
+
+
 def executar_programa():
     print('Escolha a opção desejada: \n1 - DARJ\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE')
     opcao = int(input('Opção: '))
@@ -70,7 +72,8 @@ def darj_difal():
 
 
 def darj_diario():
-    #data = input('Infome a data de emissaão do DARJ (formato dd/mm/aaaa): ')
     darj_automatico_diario()
 
 executar_programa()
+
+
