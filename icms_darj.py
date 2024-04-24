@@ -200,7 +200,8 @@ def darj_automatico_diario():
         loja = row['Cod. Destino']
         icms = row['Valor Principal']
         fecp = row['Valor Fecp']
-
+        icms_format = '{:.2f}'.format(icms)
+        fecp_format = '{:.2f}'.format(fecp)
         if tipo == 'D':
             print("Iniciando o processo de DARJ: ",nota_fiscal, cnpj_destino, str(cnpj_fornecedor), loja, icms, fecp, data_formatada)
 
@@ -252,11 +253,11 @@ def darj_automatico_diario():
 
             #campo valores
             icms_informado = driver.find_element(By.XPATH, '//*[@id="txtIcmsInformado"]').click()
-            pg.typewrite(str('{:.2f}'.format(icms)), interval=0.2)
+            pg.typewrite(icms_format, interval=0.1)
             botao_ok_1 = driver.find_element(By.XPATH, '//*[@id="okIcms"]').click()
 
             fecp_informado = driver.find_element(By.XPATH, '//*[@id="txtFecpInformado"]').click()
-            pg.typewrite(str('{:.2f}'.format(fecp)), interval=0.2)
+            pg.typewrite(fecp_format, interval=0.1)
             botao_ok_2 = driver.find_element(By.XPATH, '//*[@id="okFecp"]').click()
             #fim
             confirmar_item = driver.find_element(By.XPATH, '//*[@id="formulario"]/fieldset[2]/div[3]/input[1]').click()
