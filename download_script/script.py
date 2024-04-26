@@ -32,7 +32,8 @@ def baixar_xml():
 
     chaves = []
     for index, linha in df_excel.iterrows():
-        chaves.append(linha['Chave'])
+        if linha[0] == "G":
+            chaves.append(linha['Chave'])
     print(f'Chaves lidas:{chaves}')
 
 

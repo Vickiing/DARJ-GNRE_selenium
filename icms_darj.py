@@ -100,7 +100,7 @@ def darj_automatico_difal(cnpj, loja, icms, fecp):
     driver.quit()
 
 
-def darj_automatico(cnpj, loja, icms, fecp):
+def darj_automatico_icms(cnpj, loja, icms, fecp):
 
     print("Iniciando o processo de DARJ: ", cnpj, loja, icms, fecp)
 

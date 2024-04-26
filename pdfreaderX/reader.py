@@ -23,7 +23,7 @@ def pdf_leitor_gnre():
                 #RENOMEAR ARQUIVO PARA GNRE_ OU DARJ_
                 os.rename(arquivo, f'C:\\Users\\vlsilva\\Documents\\PYTHON PROJETOS\\python_fiscal\\Darj-Gnre_selenium\\download\\GNRE_{numero}.pdf')
                 break
-#pdf_leitor()
+pdf_leitor_gnre()
 
 def pdf_leitor_darj():
     
@@ -31,7 +31,7 @@ def pdf_leitor_darj():
     #for file in os.listdir(caminho):
         
         #arquivo = os.path.join(caminho, file)
-        caminho = r'C:\Users\vlsilva\Downloads\itenspagamento_1713964590354.pdf'
+        caminho = r'C:\Users\vlsilva\Downloads\itenspagamento_1714049660465.pdf'
         reader = PdfReader(caminho)
         page = reader.pages[0]
         page_text = page.extract_text()
@@ -39,6 +39,7 @@ def pdf_leitor_darj():
 
             #if linha.__contains__('Chave DF-e:'):
                 valores = linha.split(' ')
-                print(valores)
+                print(valores[0])
+                #os.rename(caminho, f'C:\\Users\\vlsilva\\Documents\\PYTHON PROJETOS\\python_fiscal\\Darj-Gnre_selenium\\download\\DARJ_{valores[0]}.pdf')
 
-pdf_leitor_darj()
+#pdf_leitor_darj()

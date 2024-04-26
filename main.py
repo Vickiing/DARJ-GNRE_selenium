@@ -1,17 +1,17 @@
 import pandas as pd
-from icms_darj import darj_automatico, darj_automatico_difal, darj_automatico_diario
+from icms_darj import darj_automatico_icms, darj_automatico_difal, darj_automatico_diario
 from Xml_Gnre import gnre_automatico
 from download_script.script import baixar_xml
 
 
 
 def executar_programa():
-    print('Escolha a opção desejada: \n1 - DARJ\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE')
+    print('Escolha a opção desejada: \n1 - DARJ ICMS\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE')
     opcao = int(input('Opção: '))
 
     match opcao:
         case 1:
-            darj()
+            darj_icms()
         case 2:
             darj_difal()
         case 3:
@@ -23,7 +23,7 @@ def executar_programa():
 
 
 
-def darj():
+def darj_icms():
     excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\icms.xlsx'
     df = pd.read_excel(excel)
     df['INSCRICAO'] = df['INSCRICAO'].astype(str).str.replace('\.0', '', regex=True)
@@ -42,7 +42,7 @@ def darj():
             total = icms + fecp
             print(f'Loja: {loja} - Total: {total}')
             #função pra darj
-            darj_automatico(cnpj, loja, icms_formatado, fecp_formatado)
+            darj_automatico_icms(cnpj, loja, icms_formatado, fecp_formatado)
         else:
             print(f"Loja: {loja}  não encontrada.")
 
