@@ -84,7 +84,7 @@ def baixar_xml():
             seletor_chave = Select(driver.find_element(By.XPATH, '//*[@id="referente"]'))
             seletor_chave.select_by_value('chave')
             
-            print('Inserindo Chave de Acesso...')
+            print('Inserindo Chave de Acesso...', chave)
             driver.find_element(By.XPATH, '//*[@id="busca"]').send_keys(chave)
             sleep(2)
             driver.find_element(By.XPATH, '//*[@id="busca"]').send_keys(Keys.ENTER)
@@ -92,12 +92,11 @@ def baixar_xml():
             
             driver.find_element(By.CLASS_NAME, 'xml-detalhe').click()
             sleep(2)
-            
+
+            print('Acessando XML da chave para download...')
+
             sleep(5)
-
-
-
-            print('Acessando XML para download...')
+            
             driver.execute_script("""// Seletor CSS para encontrar todos os elementos <a> com href contendo "/fiscal/recebidas/xml?id="
         var links = document.querySelectorAll('a[href*="/fiscal/recebidas/xml?id="]');
 
@@ -115,7 +114,6 @@ def baixar_xml():
             
             });
             """)
-
 
             sleep(2)
             #driver.download_file(url_xml_download, 'XML')

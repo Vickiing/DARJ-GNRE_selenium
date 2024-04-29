@@ -22,7 +22,6 @@ def executar_programa():
             baixar_xml()
 
 
-
 def darj_icms():
     excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\icms.xlsx'
     df = pd.read_excel(excel)
@@ -74,6 +73,5 @@ def darj_difal():
 def darj_diario():
     darj_automatico_diario()
 
+
 executar_programa()
-
-
