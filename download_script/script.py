@@ -84,48 +84,48 @@ def baixar_xml():
             seletor_chave = Select(driver.find_element(By.XPATH, '//*[@id="referente"]'))
             seletor_chave.select_by_value('chave')
             
-            print('Inserindo Chave de Acesso...', chave)
-            driver.find_element(By.XPATH, '//*[@id="busca"]').send_keys(chave)
-            sleep(2)
-            driver.find_element(By.XPATH, '//*[@id="busca"]').send_keys(Keys.ENTER)
-            sleep(10)
-            
-            driver.find_element(By.CLASS_NAME, 'xml-detalhe').click()
-            sleep(2)
+            elemento = False
+            while  elemento is not True:
+                try:
 
-            print('Acessando XML da chave para download...')
+                    print('Inserindo Chave de Acesso...', chave)
+                    driver.find_element(By.XPATH, '//*[@id="busca"]').send_keys(chave)
+                    sleep(2)
+                    driver.find_element(By.XPATH, '//*[@id="busca"]').send_keys(Keys.ENTER)
+                    sleep(2)
+                    
+                    driver.find_element(By.CLASS_NAME, 'xml-detalhe').click()
+                    sleep(2)
 
-            sleep(5)
-            
-            driver.execute_script("""// Seletor CSS para encontrar todos os elementos <a> com href contendo "/fiscal/recebidas/xml?id="
-        var links = document.querySelectorAll('a[href*="/fiscal/recebidas/xml?id="]');
+                    print('Acessando XML da chave para download...')
 
-        // Iterar sobre cada link encontrado
-        links.forEach(function(link) {
-            // Obter o valor do atributo href
-            var href = link.getAttribute('href');
-            console.log(href);
-            link.click();
-            
-            // Abrir em uma nova aba
-            // window.open(href, '_blank');
-            // ou
-            // Simular um clique no link
-            
-            });
-            """)
+                    sleep(5)
+                    
+                    driver.execute_script("""// Seletor CSS para encontrar todos os elementos <a> com href contendo "/fiscal/recebidas/xml?id="
+                var links = document.querySelectorAll('a[href*="/fiscal/recebidas/xml?id="]');
 
-            sleep(2)
-            #driver.download_file(url_xml_download, 'XML')
-            sleep(10)
-            print('XML baixado com sucesso!')
+                // Iterar sobre cada link encontrado
+                links.forEach(function(link) {
+                    // Obter o valor do atributo href
+                    var href = link.getAttribute('href');
+                    console.log(href);
+                    link.click();
+                    
+                    // Abrir em uma nova aba
+                    // window.open(href, '_blank');
+                    // ou
+                    // Simular um clique no link
+                    
+                    });
+                    """)
+                    
+                    sleep(10)
+                    print('XML baixado com sucesso!\n')
+                    elemento = True
+                except Exception as e:
+                    print('Tentando acessar novamente...', 'Erro:', e)
+                    elemento= False
+                    
 
     except Exception as e:
         print('Erro:', e)
-
-
-
-
-
-
-

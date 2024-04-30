@@ -1,5 +1,6 @@
 import xml.dom.minidom
 from selenium import webdriver
+import selenium.common.exceptions as se
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -57,112 +58,124 @@ def gnre_automatico():
     df = pd.read_excel(arquivo)
     print('\nArquivo Excel lido...\n')
     
-    for i in os.listdir('arquivo_xml'):
-        ua = UserAgent()
-        user_agent = ua.random
-        print(user_agent)
+    for index, row in df.iterrows():
+        tipo = row['Tipo']
+        nota_fiscal = row['Nota Fiscal']
+        serie = row['Série']
+        serie_formatada = '{:.0f}'.format(serie)
+        cnpj_fornecedor = str(row['CNPJ Fornecedor']).zfill(14)
+        cnpj_destino = row['CNPJ Destino']
+        chave_de_acesso = row['Chave']
+        loja = row['Cod. Destino']
+        icms = row['Valor Principal']
+        fecp = row['Valor Fecp']
+        icms_format = '{:.2f}'.format(icms)
+        fecp_format = '{:.2f}'.format(fecp)
 
-        options = Options()
-        preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\download'}
-        options.add_experimental_option("prefs", preferences)
-        options.add_argument(f'--user-agent={user_agent}')
-        #options.add_argument("--headless")
+        if tipo == 'G':
+            elemento = False
+            while elemento is False:
+                try:
+                    ua = UserAgent()
+                    user_agent = ua.random
+                    print(user_agent)
 
-        url = r'https://www.gnre.pe.gov.br:444/gnre/v/guia/index'
-        service = Service(executable_path="chromedriver.exe")
-        driver = webdriver.Chrome(service=service, 
-        options=options)
+                    options = Options()
+                    preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\download'}
+                    options.add_experimental_option("prefs", preferences)
+                    options.add_argument(f'--user-agent={user_agent}')
+                    #options.add_argument("--headless")
 
-        driver.get(url)
-        sleep(5)
+                    url = r'https://www.gnre.pe.gov.br:444/gnre/v/guia/index'
+                    service = Service(executable_path="chromedriver.exe")
+                    driver = webdriver.Chrome(service=service, 
+                    options=options)
 
-        pasta_caminho = 'arquivo_xml'
-        xml_arquivo = f'{pasta_caminho}\{i}'
-        xml_data = xml_leitor(xml_arquivo)
+                    driver.get(url)
+                    sleep(5)
+                    
+                    pasta_caminho = 'arquivo_xml'
+                    xml_arquivo = f'{pasta_caminho}\{chave_de_acesso}-procNFe.xml'
+                    print(xml_arquivo)
+                    xml_data = xml_leitor(xml_arquivo)
 
-        loja = df[df['Chave'] == xml_data.chave]['Cod. Destino'].iloc[0]
-        chave = df[df['Chave'] == xml_data.chave]['Chave'].iloc[0]
-        fornecedor = df[df['Chave'] == xml_data.chave]['Fornecedor'].iloc[0]
-        valor_fecp = df[df['Chave'] == xml_data.chave]['Valor Fecp'].iloc[0]
-        valor_principal = df[df['Chave'] == xml_data.chave]['Valor Principal'].iloc[0]
-       
-        print(f'Emitindo GNRE para: \nLoja: {loja}\nChave: {chave}\nFornecedor: {fornecedor}\nValor Principal: {valor_principal}\nValor Fecp: {valor_fecp}')
+                    loja = df[df['Chave'] == xml_data.chave]['Cod. Destino'].iloc[0]
+                    chave = df[df['Chave'] == xml_data.chave]['Chave'].iloc[0]
+                    fornecedor = df[df['Chave'] == xml_data.chave]['Fornecedor'].iloc[0]
+                    valor_fecp = df[df['Chave'] == xml_data.chave]['Valor Fecp'].iloc[0]
+                    valor_principal = df[df['Chave'] == xml_data.chave]['Valor Principal'].iloc[0]
+                
+                    print(f'Emitindo GNRE para: \nLoja: {loja}\nChave: {chave}\nFornecedor: {fornecedor}\nValor Principal: {valor_principal}\nValor Fecp: {valor_fecp}')
 
+                    uf_favorecida = driver.find_element(By.XPATH, '//*[@id="ufFavorecida"]/option[19]').click()
+                    tipo_gnre = driver.find_element(By.XPATH, '//*[@id="optGnreSimples"]').click()
+                    incr_uf = driver.find_element(By.XPATH, '//*[@id="optNaoInscrito"]').click()
+                    doc_identificacao = driver.find_element(By.XPATH, '//*[@id="tipoCNPJ"]').click()
+                    campo_cnpj = driver.find_element(By.XPATH, '//*[@id="documentoEmitente"]').send_keys(str(xml_data.cnpj_destinatario))
+                    razao_social = driver.find_element(By.XPATH, '//*[@id="razaoSocialEmitente"]').send_keys(str(xml_data.razao_social))
 
-        uf_favorecida = driver.find_element(By.XPATH, '//*[@id="ufFavorecida"]/option[19]').click()
-        tipo_gnre = driver.find_element(By.XPATH, '//*[@id="optGnreSimples"]').click()
-        incr_uf = driver.find_element(By.XPATH, '//*[@id="optNaoInscrito"]').click()
-        doc_identificacao = driver.find_element(By.XPATH, '//*[@id="tipoCNPJ"]').click()
-        pg.typewrite(str(xml_data.cnpj_destinatario), interval=0.1)
+                    endereco = driver.find_element(By.XPATH, '//*[@id="enderecoEmitente"]').send_keys(str(xml_data.endereco))
 
-        razao_social = driver.find_element(By.XPATH, '//*[@id="razaoSocialEmitente"]').click()
-        pg.typewrite(str(xml_data.razao_social), interval=0.1)
+                    select_uf = driver.find_element(By.ID, 'ufEmitente')
+                    select = Select(select_uf)
+                    uf_element = select.select_by_value(xml_data.uf_destinatario)
 
-        endereco = driver.find_element(By.XPATH, '//*[@id="enderecoEmitente"]').click()
-        pg.typewrite(str(xml_data.endereco), interval=0.1)
+                    sleep(3)
 
-        select_uf = driver.find_element(By.ID, 'ufEmitente')
-        select = Select(select_uf)
-        uf_element = select.select_by_value(xml_data.uf_destinatario)
+                    municipio_element = driver.find_element(By.ID, 'municipioEmitente')
+                    select = Select(municipio_element)
+                    select.select_by_visible_text(xml_data.mun.upper())
+                    cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').click()
+                    pg.press('backspace', presses=8)
+                    #cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').clear()
+                    sleep(3)
+                    cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').send_keys(str(xml_data.cep))
+                    receita_tipo = driver.find_element(By.XPATH, '//*[@id="receita"]')
+                    select = Select(receita_tipo)
+                    select.select_by_value('100099')
 
-        sleep(3)
+                    documento_origem = driver.find_element(By.XPATH, '//*[@id="tipoDocOrigem"]')
+                    select = Select(documento_origem)
+                    select.select_by_value('24')
+                    
+                    numero_doc_origem = driver.find_element(By.XPATH, '//*[@id="numeroDocumentoOrigem"]').send_keys(str(xml_data.chave))
+                    data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').click()
+                    pg.press('backspace', presses=8)
+                    data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').send_keys(str(day))
 
-        municipio_element = driver.find_element(By.ID, 'municipioEmitente')
-        select = Select(municipio_element)
-        select.select_by_visible_text(xml_data.mun.upper())
-        cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').click()
-        pg.press('backspace', presses=8)
-        sleep(3)
-        cep_element = driver.find_element(By.XPATH, '//*[@id="cepEmitente"]').send_keys(str(xml_data.cep))
-        receita_tipo = driver.find_element(By.XPATH, '//*[@id="receita"]')
-        select = Select(receita_tipo)
-        select.select_by_value('100099')
+                    valor_principal = driver.find_element(By.XPATH, '//*[@id="valor"]').click()
+                    valor_principal_digitado = df[df['Chave'] == xml_data.chave]['Valor Principal'].iloc[0]
+                    pg.typewrite(str('{:.2f}'.format(valor_principal_digitado)), interval=0.1)
 
-        documento_origem = driver.find_element(By.XPATH, '//*[@id="tipoDocOrigem"]')
-        select = Select(documento_origem)
-        select.select_by_value('24')
-        
-        numero_doc_origem = driver.find_element(By.XPATH, '//*[@id="numeroDocumentoOrigem"]').send_keys(str(xml_data.chave))
-        data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').click()
-        pg.press('backspace', presses=8)
-        data_vencimento = driver.find_element(By.XPATH, '//*[@id="dataVencimento"]').send_keys(str(day))
+                    valor_fecp = driver.find_element(By.XPATH, '//*[@id="valorFecp"]').click()
+                    valor_fecp_digitado = df[df['Chave'] == xml_data.chave]['Valor Fecp'].iloc[0]
+                    pg.typewrite(str('{:.2f}'.format(valor_fecp_digitado)), interval=0.1)
 
-        valor_principal = driver.find_element(By.XPATH, '//*[@id="valor"]').click()
-        valor_principal_digitado = df[df['Chave'] == xml_data.chave]['Valor Principal'].iloc[0]
-        pg.typewrite(str('{:.2f}'.format(valor_principal_digitado)), interval=0.1)
+                    insc_uf_favorecida = driver.find_element(By.XPATH, '//*[@id="optInscritoDest"]').click()
+                    inscricao_estadual = driver.find_element(By.XPATH, '//*[@id="inscricaoEstadualDestinatario"]').click()
+                    ins_estadual = df[df['Chave'] == xml_data.chave]['Insc. Estadual Dest.'].iloc[0]
+                    ins_estadual_formatada = '{:.0f}'.format(ins_estadual)
+                    pg.typewrite(str(ins_estadual_formatada), interval=0.1)
 
-        valor_fecp = driver.find_element(By.XPATH, '//*[@id="valorFecp"]').click()
-        valor_fecp_digitado = df[df['Chave'] == xml_data.chave]['Valor Fecp'].iloc[0]
-        pg.typewrite(str('{:.2f}'.format(valor_fecp_digitado)), interval=0.1)
+                    data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').click()
+                    pg.press('backspace', presses=8)
+                    data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').send_keys(str(day))
 
-        insc_uf_favorecida = driver.find_element(By.XPATH, '//*[@id="optInscritoDest"]').click()
-        inscricao_estadual = driver.find_element(By.XPATH, '//*[@id="inscricaoEstadualDestinatario"]').click()
-        ins_estadual = df[df['Chave'] == xml_data.chave]['Insc. Estadual Dest.'].iloc[0]
-        ins_estadual_formatada = '{:.0f}'.format(ins_estadual)
-        pg.typewrite(str(ins_estadual_formatada), interval=0.1)
+                    loja = df[df['Chave'] == xml_data.chave]['Cod. Destino'].iloc[0]
+                    info_complementares = driver.find_element(By.XPATH, '//*[@id="campoAdicional01"]').click()
+                    pg.typewrite(f'Loja: {str(loja)}', interval=0.1)
 
-        data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').click()
-        pg.press('backspace', presses=8)
-        data_emissao = driver.find_element(By.XPATH, '//*[@id="campoAdicional00"]').send_keys(str(day))
+                    elemento = True
 
-        loja = df[df['Chave'] == xml_data.chave]['Cod. Destino'].iloc[0]
-        info_complementares = driver.find_element(By.XPATH, '//*[@id="campoAdicional01"]').click()
-        pg.typewrite(f'Loja: {str(loja)}', interval=0.1)
-        
-        botao_validar = driver.find_element(By.XPATH, '//*[@id="validar"]').click()
-        sleep(15)
-        print('\nBaixando documento...\n')
-        baixar = driver.find_element(By.XPATH, '//*[@id="baixar"]').click()
-        sleep(10)
-        print('Docmento GNRE baixado com sucesso!')
-        driver.quit()
+                except se.NoSuchElementException as e:
+                    print("Elemento não encontrado:", e)
+                    continue
+                    
+            botao_validar = driver.find_element(By.XPATH, '//*[@id="validar"]').click()
+            sleep(15)
 
-
-#gnre_automatico()
-# xml_ob = xml_leitor()
-# arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj_selenium\RelatorioPgtoSubsTrib.xls'
-# df = pd.read_excel(arquivo)
-# print(df)
-# valor_digitado = df[df['Chave'] == xml_ob.chave]['Valor Principal'].iloc[0]
-# valor_fecp = df[df['Chave'] == xml_ob.chave]['Valor Fecp']
-# print(f'Valor Principal: {valor_digitado}\nValor Fecp: {valor_fecp}')
+            print('\nBaixando documento...\n')
+            baixar = driver.find_element(By.XPATH, '//*[@id="baixar"]').click()
+            sleep(10)
+            print('Docmento GNRE baixado com sucesso!')
+            driver.quit()

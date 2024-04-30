@@ -198,7 +198,7 @@ def darj_automatico_diario():
         nota_fiscal = row['Nota Fiscal']
         serie = row['Série']
         serie_formatada = '{:.0f}'.format(serie)
-        cnpj_fornecedor = str(row['CNPJ Fornecedor']).zfill(14)
+        cnpj_fornecedor = str(int(row['CNPJ Fornecedor'])).zfill(14)
         cnpj_destino = row['CNPJ Destino']
         loja = row['Cod. Destino']
         icms = row['Valor Principal']
@@ -214,7 +214,7 @@ def darj_automatico_diario():
             preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\download'}
             options.add_experimental_option("prefs", preferences)
             #options.add_argument('--headless')
-            url = r'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/br/gov/rj/sef/gct/web/emitirdocumentoarrecadacao/begin.do'
+            url = r'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/'
             service = Service(executable_path="chromedriver.exe")
             driver = webdriver.Chrome(service=service, options=options)
             print('Acessando: ', url)
@@ -251,7 +251,7 @@ def darj_automatico_diario():
             sleep(2)
             data_emissao = driver.find_element(By.XPATH, '//*[@id="txtDataNf"]').send_keys(data_formatada)
             sleep(1)
-            cnpj_emitente = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpfNf"]').send_keys(cnpj_fornecedor)
+            cnpj_emitente = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpfNf"]').send_keys(str(cnpj_fornecedor))
 
             botao_data = driver.find_element(By.XPATH, '//*[@id="btnAlterarData"]').click()
             sleep(2)
