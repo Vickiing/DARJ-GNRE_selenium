@@ -205,6 +205,7 @@ def darj_automatico_diario():
         fecp = row['Valor Fecp']
         icms_format = '{:.2f}'.format(icms)
         fecp_format = '{:.2f}'.format(fecp)
+        Classe = row['Classe']
 
         if tipo == 'D':
 
@@ -213,7 +214,7 @@ def darj_automatico_diario():
             options = Options()
             preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\download'}
             options.add_experimental_option("prefs", preferences)
-            #options.add_argument('--headless')
+            options.add_argument('--headless')
             url = r'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/'
             service = Service(executable_path="chromedriver.exe")
             driver = webdriver.Chrome(service=service, options=options)
@@ -234,7 +235,12 @@ def darj_automatico_diario():
             sleep(3)
 
             select_produto = Select(driver.find_element(By.XPATH, '//*[@id="slcListaProduto"]'))
-            select_produto.select_by_value('698')#outros
+            if Classe == 'PRODUTOS ALIMENTICIOS':
+                classe_selecionada =select_produto.select_by_value('469')#alimenticio
+            else:
+                classe_selecionada = select_produto.select_by_value('698')#outros
+
+            print('Classe selecionada: ', Classe)
 
             c_cnpj = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpf"]').send_keys(str(cnpj_destino))
             sleep(2)
@@ -262,6 +268,7 @@ def darj_automatico_diario():
             
             sleep(3)
 
+            print('Iniciando o preenchimento dos campos valores...')
             #campo valores
             icms_informado = driver.find_element(By.XPATH, '//*[@id="txtIcmsInformado"]').send_keys(icms_format)
             botao_ok_1 = driver.find_element(By.XPATH, '//*[@id="okIcms"]').click()
@@ -273,7 +280,7 @@ def darj_automatico_diario():
             botao_gerar_darj = driver.find_element(By.XPATH, '//*[@id="boxResumo_botoes2"]/input').click()
             sleep(10)
             print('iniciando o download')
-            script = """
+            driver.execute_script("""
                     var downloadLink = document.createElement('a');
                     downloadLink.setAttribute('id', 'downloadLink');
                     downloadLink.setAttribute('href', 'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/br/gov/rj/sef/gct/web/emitirdocumentoarrecadacao/transfereDadosDebitos.do');
@@ -284,9 +291,9 @@ def darj_automatico_diario():
                     document.body.appendChild(downloadLink);
 
                     // Simula um clique no link de download
-                    downloadLink.click();
-                    """
-            driver.execute_script(script)
+                    //Se estiver no modo headless, precisa desativar o click no botao
+                    //downloadLink.click();
+                    """)
             print('Download concluído')
             sleep(2)
-            #driver.quit()
+            driver.quit()

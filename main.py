@@ -40,7 +40,6 @@ def darj_icms():
             fecp_formatado = '{:.2f}'.format(fecp)
             total = icms + fecp
             print(f'Loja: {loja} - Total: {total}')
-            #função pra darj
             darj_automatico_icms(cnpj, loja, icms_formatado, fecp_formatado)
         else:
             print(f"Loja: {loja}  não encontrada.")
@@ -64,7 +63,6 @@ def darj_difal():
             fecp_formatado = '{:.2f}'.format(fecp)
             total = icms + fecp
             print(f'Loja: {loja} - Total: {total}')
-            #função pra darj
             darj_automatico_difal(cnpj, loja, icms_formatado, fecp_formatado)
         else:
             print(f"Loja: {loja}  não encontrada.")
