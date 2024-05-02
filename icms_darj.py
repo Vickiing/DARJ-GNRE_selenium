@@ -291,7 +291,7 @@ def darj_automatico_diario():
                     document.body.appendChild(downloadLink);
 
                     // Simula um clique no link de download
-                    //Se estiver no modo headless, precisa desativar o click no botao
+                    //Se o driver estiver no modo headless, precisa desativar o click no botao
                     //downloadLink.click();
                     """)
             print('Download concluído')
