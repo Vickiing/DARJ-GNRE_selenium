@@ -24,12 +24,13 @@ class XML:
         self.razao_social = None
         self.endereco = None
         self.cep = None
+        self.cod_municipio = None
 
 def xml_leitor(xml_arquivo):
     
     dom = xml.dom.minidom.parse(xml_arquivo)
     
-    xml_obj = XML()  
+    xml_obj = XML()
     
     try:
         xml_obj.cnpj_destinatario = dom.getElementsByTagName('CNPJ')[0].firstChild.data
@@ -39,7 +40,8 @@ def xml_leitor(xml_arquivo):
         xml_obj.endereco = dom.getElementsByTagName('xLgr')[0].firstChild.data
         xml_obj.chave = dom.getElementsByTagName('chNFe')[0].firstChild.data
         xml_obj.cep = dom.getElementsByTagName('CEP')[0].firstChild.data
-        
+        xml_obj.cod_municipio = dom.getElementsByTagName('cMun')[0].firstChild.data
+
         return xml_obj
     
     except Exception as e:
