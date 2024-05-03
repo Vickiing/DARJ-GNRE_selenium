@@ -142,4 +142,3 @@ def Gnre_Xml_Generator_Lote():
 
         # Salvando a árvore XML em um arquivo
         tree.write(f"xml-gnre-construidos/GNRE_UNICO.xml", encoding="utf-8", xml_declaration=True)
-Gnre_Xml_Generator_Lote()
