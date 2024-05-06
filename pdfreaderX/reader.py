@@ -42,3 +42,8 @@ def pdf_leitor_darj():
                     os.rename(arquivo, f'C:\\Users\\vlsilva\\Documents\\PYTHON PROJETOS\\python_fiscal\\Darj-Gnre_selenium\\download\\DARJ_{valores[-1]}.pdf')
                     break
 
+def executar():
+    pdf_leitor_darj()
+    pdf_leitor_gnre()
+
+executar()

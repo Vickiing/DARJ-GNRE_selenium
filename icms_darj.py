@@ -215,85 +215,95 @@ def darj_automatico_diario():
             preferences = {'download.default_directory' : r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\download'}
             options.add_experimental_option("prefs", preferences)
             options.add_argument('--headless')
-            url = r'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/'
+            url = r'https://www1.fazenda.rj.gov.br/portaldepagamentos/'
             service = Service(executable_path="chromedriver.exe")
             driver = webdriver.Chrome(service=service, options=options)
             print('Acessando: ', url)
-            driver.get(url)
-            sleep(5)
 
-            c_tipo_pagamento = Select(driver.find_element(By.XPATH, '//*[@id="tipoPagamentoLista"]'))
-            c_tipo_pagamento.select_by_value('1')
-            sleep(2)
-            c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
-            sleep(2)
-            c_data = driver.find_element(By.XPATH, '//*[@id="txtDataPagamento"]').send_keys(data_formatada)
-            c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
-            sleep(2)
-            c_natureza = Select(driver.find_element(By.XPATH, '//*[@id="slcNaturezaLista"]'))
-            c_natureza.select_by_value('4')
-            sleep(3)
 
-            select_produto = Select(driver.find_element(By.XPATH, '//*[@id="slcListaProduto"]'))
-            if Classe == 'PRODUTOS ALIMENTICIOS':
-                classe_selecionada =select_produto.select_by_value('469')#alimenticio
-            else:
-                classe_selecionada = select_produto.select_by_value('698')#outros
+            elemento = False
+            while  elemento is not True:
+                try:
+                    driver.get(url)
+                    sleep(5)
 
-            print('Classe selecionada: ', Classe)
+                    c_tipo_pagamento = Select(driver.find_element(By.XPATH, '//*[@id="tipoPagamentoLista"]'))
+                    c_tipo_pagamento.select_by_value('1')
+                    sleep(2)
+                    c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
+                    sleep(2)
+                    c_data = driver.find_element(By.XPATH, '//*[@id="txtDataPagamento"]').send_keys(data_formatada)
+                    c_botao_alterar = driver.find_element(By.XPATH, '//*[@id="btnAlterarDataPagamento"]').click()
+                    sleep(2)
+                    c_natureza = Select(driver.find_element(By.XPATH, '//*[@id="slcNaturezaLista"]'))
+                    c_natureza.select_by_value('4')
+                    sleep(3)
 
-            c_cnpj = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpf"]').send_keys(str(cnpj_destino))
-            sleep(2)
-            c_botao_confirmar = driver.find_element(By.XPATH, '//*[@id="btnConfirmar"]').click()
-            sleep(2)
-            tipo_apuracao = driver.find_element(By.XPATH, '//*[@id="rdgPorOperacao"]').click()
-            sleep(2)
-            numero_nota = driver.find_element(By.XPATH, '//*[@id="txtNotaFiscal"]')
-            sleep(2)
-            numero_nota.send_keys(nota_fiscal)
-            serie_nf = driver.find_element(By.XPATH, '//*[@id="txtSerieNf"]').send_keys(serie_formatada)
-            c_tipo = Select(driver.find_element(By.XPATH, '//*[@id="slcTipoNf"]'))
-            c_tipo.select_by_value("NF-e")
-            sleep(2)
-            data_emissao = driver.find_element(By.XPATH, '//*[@id="txtDataNf"]').send_keys(data_formatada)
-            sleep(1)
-            cnpj_emitente = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpfNf"]').send_keys(str(cnpj_fornecedor))
+                    select_produto = Select(driver.find_element(By.XPATH, '//*[@id="slcListaProduto"]'))
+                    if Classe == 'PRODUTOS ALIMENTICIOS':
+                        classe_selecionada =select_produto.select_by_value('469')#alimenticio
+                    else:
+                        classe_selecionada = select_produto.select_by_value('698')#outros
 
-            botao_data = driver.find_element(By.XPATH, '//*[@id="btnAlterarData"]').click()
-            sleep(2)
-            driver.find_element(By.XPATH,'//*[@id="txtDataVencimento"]').send_keys(data_formatada)
+                    print('Classe selecionada: ', Classe)
 
-            sleep(2)
-            info_complementares = driver.find_element(By.XPATH, '//*[@id="txtJustificativa"]').send_keys(f'LOJA:{loja}')
-            
-            sleep(3)
+                    c_cnpj = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpf"]').send_keys(str(cnpj_destino))
+                    sleep(2)
+                    c_botao_confirmar = driver.find_element(By.XPATH, '//*[@id="btnConfirmar"]').click()
+                    sleep(2)
+                    tipo_apuracao = driver.find_element(By.XPATH, '//*[@id="rdgPorOperacao"]').click()
+                    sleep(2)
+                    numero_nota = driver.find_element(By.XPATH, '//*[@id="txtNotaFiscal"]')
+                    sleep(2)
+                    numero_nota.send_keys(nota_fiscal)
+                    serie_nf = driver.find_element(By.XPATH, '//*[@id="txtSerieNf"]').send_keys(serie_formatada)
+                    c_tipo = Select(driver.find_element(By.XPATH, '//*[@id="slcTipoNf"]'))
+                    c_tipo.select_by_value("NF-e")
+                    sleep(2)
+                    data_emissao = driver.find_element(By.XPATH, '//*[@id="txtDataNf"]').send_keys(data_formatada)
+                    sleep(1)
+                    cnpj_emitente = driver.find_element(By.XPATH, '//*[@id="txtCnpjCpfNf"]').send_keys(str(cnpj_fornecedor))
 
-            print('Iniciando o preenchimento dos campos valores...')
-            #campo valores
-            icms_informado = driver.find_element(By.XPATH, '//*[@id="txtIcmsInformado"]').send_keys(icms_format)
-            botao_ok_1 = driver.find_element(By.XPATH, '//*[@id="okIcms"]').click()
-            fecp_informado = driver.find_element(By.XPATH, '//*[@id="txtFecpInformado"]').send_keys(fecp_format)            
-            botao_ok_2 = driver.find_element(By.XPATH, '//*[@id="okFecp"]').click()
-            confirmar_item = driver.find_element(By.XPATH, '//*[@id="formulario"]/fieldset[2]/div[3]/input[1]').click()
-            sleep(5)
+                    botao_data = driver.find_element(By.XPATH, '//*[@id="btnAlterarData"]').click()
+                    sleep(2)
+                    driver.find_element(By.XPATH,'//*[@id="txtDataVencimento"]').send_keys(data_formatada)
 
-            botao_gerar_darj = driver.find_element(By.XPATH, '//*[@id="boxResumo_botoes2"]/input').click()
-            sleep(10)
-            print('iniciando o download')
-            driver.execute_script("""
-                    var downloadLink = document.createElement('a');
-                    downloadLink.setAttribute('id', 'downloadLink');
-                    downloadLink.setAttribute('href', 'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/br/gov/rj/sef/gct/web/emitirdocumentoarrecadacao/transfereDadosDebitos.do');
-                    downloadLink.setAttribute('download', 'documento.pdf');
-                    downloadLink.innerHTML = 'Download PDF';
+                    sleep(2)
+                    info_complementares = driver.find_element(By.XPATH, '//*[@id="txtJustificativa"]').send_keys(f'LOJA:{loja}')
+                    
+                    sleep(3)
 
-                    // Adiciona o link à página
-                    document.body.appendChild(downloadLink);
+                    print('Iniciando o preenchimento dos campos valores...')
+                    #campo valores
+                    icms_informado = driver.find_element(By.XPATH, '//*[@id="txtIcmsInformado"]').send_keys(icms_format)
+                    botao_ok_1 = driver.find_element(By.XPATH, '//*[@id="okIcms"]').click()
+                    fecp_informado = driver.find_element(By.XPATH, '//*[@id="txtFecpInformado"]').send_keys(fecp_format)            
+                    botao_ok_2 = driver.find_element(By.XPATH, '//*[@id="okFecp"]').click()
+                    confirmar_item = driver.find_element(By.XPATH, '//*[@id="formulario"]/fieldset[2]/div[3]/input[1]').click()
+                    sleep(5)
 
-                    // Simula um clique no link de download
-                    //Se o driver estiver no modo headless, precisa desativar o click no botao
-                    //downloadLink.click();
-                    """)
-            print('Download concluído')
-            sleep(2)
-            driver.quit()
+                    botao_gerar_darj = driver.find_element(By.XPATH, '//*[@id="boxResumo_botoes2"]/input').click()
+                    sleep(10)
+                    print('iniciando o download')
+                    driver.execute_script("""
+                            var downloadLink = document.createElement('a');
+                            downloadLink.setAttribute('id', 'downloadLink');
+                            downloadLink.setAttribute('href', 'https://www1.fazenda.rj.gov.br/projetoGCTBradesco/br/gov/rj/sef/gct/web/emitirdocumentoarrecadacao/transfereDadosDebitos.do');
+                            downloadLink.setAttribute('download', 'documento.pdf');
+                            downloadLink.innerHTML = 'Download PDF';
+
+                            // Adiciona o link à página
+                            document.body.appendChild(downloadLink);
+
+                            // Simula um clique no link de download
+                            //Se o driver estiver no modo headless, precisa desativar o click no botao
+                            //downloadLink.click();
+                            """)
+                    print('Download concluído')
+                    elemento = True
+                except Exception as e:
+                    print('Tentando acessar novamente...', 'Erro:', e)
+                    elemento= False
+                sleep(2)
+                #driver.quit()
+                #return True

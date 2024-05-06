@@ -16,7 +16,7 @@ def executar_programa():
         case 2:
             darj_difal()
         case 3:
-            Gnre_Xml_Generator_Lote()
+            gnre_automatico()
         case 4:
             darj_diario()
         case 5:
