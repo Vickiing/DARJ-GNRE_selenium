@@ -7,7 +7,7 @@ from download_script.script import baixar_xml
 
 
 def executar_programa():
-    print('Escolha a opção desejada: \n1 - DARJ ICMS\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE')
+    print('Escolha a opção desejada: \n1 - DARJ ICMS\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE\n6 -GNRE EM LOTE (EXPERIMENTAL)')
     opcao = int(input('Opção: '))
 
     match opcao:
@@ -21,6 +21,8 @@ def executar_programa():
             darj_diario()
         case 5:
             baixar_xml()
+        case 6:
+            Gnre_Xml_Generator_Lote()
 
 
 def darj_icms():

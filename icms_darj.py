@@ -282,9 +282,10 @@ def darj_automatico_diario():
                     confirmar_item = driver.find_element(By.XPATH, '//*[@id="formulario"]/fieldset[2]/div[3]/input[1]').click()
                     sleep(5)
 
-                    botao_gerar_darj = driver.find_element(By.XPATH, '//*[@id="boxResumo_botoes2"]/input').click()
-                    sleep(10)
                     print('iniciando o download')
+                    botao_gerar_darj = driver.find_element(By.XPATH, '//*[@id="boxResumo_botoes2"]/input').click()
+                    
+                    sleep(10)
                     driver.execute_script("""
                             var downloadLink = document.createElement('a');
                             downloadLink.setAttribute('id', 'downloadLink');
@@ -300,6 +301,7 @@ def darj_automatico_diario():
                             //downloadLink.click();
                             """)
                     print('Download concluído')
+                    
                     elemento = True
                 except Exception as e:
                     print('Tentando acessar novamente...', 'Erro:', e)

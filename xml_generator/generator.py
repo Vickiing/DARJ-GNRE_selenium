@@ -17,6 +17,8 @@ from Xml_Gnre import xml_leitor, XML
 
 def Gnre_Xml_Generator_Lote():
     
+    data = '2024-05-10'
+    
     arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
     df = pd.read_excel(arquivo)
     print('\nArquivo Excel lido...\n')
@@ -47,6 +49,7 @@ def Gnre_Xml_Generator_Lote():
             icms_format = '{:.2f}'.format(icms)
             fecp_format = '{:.2f}'.format(fecp)
             valor_total = row['ICMS R.F.']
+            valor_total_format = '{:.2f}'.format(valor_total)
             print('Montando Xml GNRE com as seguintes informações: \n')
             print('\nTipo: {}\nNota Fiscal: {}\nSerie: {}\nCNPJ Fornecedor: {}\nCNPJ Destino: {}\nChave: {}\nCod. Destino: {}\nValor Principal: {}\nValor Fecp: {}\n'.format(tipo, nota_fiscal, serie_formatada, cnpj_fornecedor, cnpj_destino, chave_de_acesso, loja, icms_format, fecp_format))
     
@@ -106,7 +109,7 @@ def Gnre_Xml_Generator_Lote():
             produto = ET.SubElement(item, "produto")
             produto.text = "89" #Tipo de produto = Outros
             dataVencimento = ET.SubElement(item, "dataVencimento")
-            dataVencimento.text = "2024-05-03" # Data vencimento
+            dataVencimento.text = data # Data vencimento
             valor_principal = ET.SubElement(item, "valor")
             valor_principal.set("tipo", "11") # 11 - Valor Principal
             valor_principal.text = str(icms_format) # Valor Principal
@@ -125,7 +128,7 @@ def Gnre_Xml_Generator_Lote():
             codigo = ET.SubElement(campoExtra1, "codigo")
             codigo.text = "117"
             valor_dt = ET.SubElement(campoExtra1, "valor")
-            valor_dt.text = "2024-05-03" # Data de emissão da GNRE
+            valor_dt.text = data # Data de emissão da GNRE
             campoExtra2 = ET.SubElement(t_camposExtras, "campoExtra")
             codigo = ET.SubElement(campoExtra2, "codigo")
             codigo.text = "118" 
@@ -133,12 +136,13 @@ def Gnre_Xml_Generator_Lote():
             valor_dt.text = f'Loja {str(loja)}' # Informações complementares
 
             t_valorGNRE = ET.SubElement(t_dados_gnre, "valorGNRE")
-            t_valorGNRE.text = str(valor_total) # Valor Total da GNRE
+            t_valorGNRE.text = str(valor_total_format) # Valor Total da GNRE
             dataPagamento = ET.SubElement(t_dados_gnre, "dataPagamento")
-            dataPagamento.text = "2024-05-03" # Data de pagamento
+            dataPagamento.text = data # Data de pagamento
 
         # Criando a árvore XML
         tree = ET.ElementTree(root)
 
         # Salvando a árvore XML em um arquivo
         tree.write(f"xml-gnre-construidos/GNRE_UNICO.xml", encoding="utf-8", xml_declaration=True)
+#Gnre_Xml_Generator_Lote()

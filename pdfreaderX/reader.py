@@ -35,8 +35,8 @@ def pdf_leitor_darj():
             page_text = page.extract_text()
             lista_linhas = page_text.split('\n')
             for index, linha in enumerate(lista_linhas):
-
-                if linha.__contains__('RIO DE JANEIRO RJ 21021-020'):
+                #print(linha)
+                if linha.__contains__('RIO DE JANEIRO RJ'):
                     valores = linha.split(' ')
                     print(valores[-1])
                     os.rename(arquivo, f'C:\\Users\\vlsilva\\Documents\\PYTHON PROJETOS\\python_fiscal\\Darj-Gnre_selenium\\download\\DARJ_{valores[-1]}.pdf')
