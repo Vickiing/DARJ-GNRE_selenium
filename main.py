@@ -5,25 +5,31 @@ from xml_generator.generator import Gnre_Xml_Generator_Lote
 from download_script.script import baixar_xml
 
 
-
 def executar_programa():
-    print('Escolha a opção desejada: \n1 - DARJ ICMS\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML GNRE\n6 -GNRE EM LOTE (EXPERIMENTAL)')
-    opcao = int(input('Opção: '))
+    while True:
+        try:
+            print('Escolha a opção desejada: \n1 - DARJ ICMS\n2 - DARJ DIFAL\n3 - GNRE\n4 - DARJ DIARIO\n5 - BAIXAR  XML DA PLANILHA (GNRE)\n6 -GNRE EM LOTE (EXPERIMENTAL)\n9 - SAIR')
+            opcao = int(input('Opção: '))
+                
+            match opcao:
+                        case 1:
+                            darj_icms()
+                        case 2:
+                            darj_difal()
+                        case 3:
+                            gnre_automatico()
+                        case 4:
+                            darj_diario()
+                        case 5:
+                            baixar_xml()
+                        case 6:
+                            Gnre_Xml_Generator_Lote()
+                        case 9:
+                            print('Encerrando aplicação.')
+                            exit()
 
-    match opcao:
-        case 1:
-            darj_icms()
-        case 2:
-            darj_difal()
-        case 3:
-            gnre_automatico()
-        case 4:
-            darj_diario()
-        case 5:
-            baixar_xml()
-        case 6:
-            Gnre_Xml_Generator_Lote()
-
+        except Exception as e:
+            print(f'Erro: {e}')
 
 def darj_icms():
     excel = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\icms.xlsx'
@@ -73,6 +79,5 @@ def darj_difal():
 
 def darj_diario():
     darj_automatico_diario()
-
 
 executar_programa()

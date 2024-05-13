@@ -175,13 +175,6 @@ def darj_automatico_icms(cnpj, loja, icms, fecp):
     pg.typewrite(f'LOJA {loja}', interval=0.2)
     pg.press('enter')
     sleep(1.5)
-    #sair = input('Pressione enter para sair')
-    #if sair == None or sair == '':
-    #    driver.quit()
-    #    print('driver encerrado')
-    #else:
-    #    print('Encerrando em 5 segundos...')
-    #    sleep(5)
     driver.quit()
 
 
@@ -307,5 +300,3 @@ def darj_automatico_diario():
                     print('Tentando acessar novamente...', 'Erro:', e)
                     elemento= False
                 sleep(2)
-                #driver.quit()
-                #return True

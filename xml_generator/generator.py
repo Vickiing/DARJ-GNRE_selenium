@@ -1,5 +1,6 @@
 import sys
 import os
+import datetime
 
 # Adiciona o diretório raiz do projeto ao Python PATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,8 +18,8 @@ from Xml_Gnre import xml_leitor, XML
 
 def Gnre_Xml_Generator_Lote():
     
-    data = '2024-05-10'
-    
+    data = datetime.date.today()
+
     arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
     df = pd.read_excel(arquivo)
     print('\nArquivo Excel lido...\n')
@@ -31,7 +32,6 @@ def Gnre_Xml_Generator_Lote():
 
     # Adicionando o elemento 'guias' como filho do elemento raiz
     guias = ET.SubElement(root, "guias")
-
 
     for index, row in df.iterrows():
 
