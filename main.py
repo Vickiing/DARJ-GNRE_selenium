@@ -2,7 +2,7 @@ import pandas as pd
 from icms_darj import darj_automatico_icms, darj_automatico_difal, darj_automatico_diario
 from Xml_Gnre import gnre_automatico
 from xml_generator.generator import Gnre_Xml_Generator_Lote
-from download_script.script import baixar_xml
+from download_script.script import execucao
 
 
 def executar_programa():
@@ -21,7 +21,7 @@ def executar_programa():
                         case 4:
                             darj_diario()
                         case 5:
-                            baixar_xml()
+                            execucao()
                         case 6:
                             Gnre_Xml_Generator_Lote()
                         case 9:
