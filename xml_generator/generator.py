@@ -18,7 +18,9 @@ from Xml_Gnre import xml_leitor, XML
 
 def Gnre_Xml_Generator_Lote():
     
-    data = datetime.date.today()
+    data = str(datetime.date.today())
+    #data = str(data)
+    #data = '2024-05-15'
 
     arquivo = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\RelatorioPgtoSubsTrib.xls'
     df = pd.read_excel(arquivo)
@@ -145,4 +147,3 @@ def Gnre_Xml_Generator_Lote():
 
         # Salvando a árvore XML em um arquivo
         tree.write(f"xml-gnre-construidos/GNRE_UNICO.xml", encoding="utf-8", xml_declaration=True)
-#Gnre_Xml_Generator_Lote()

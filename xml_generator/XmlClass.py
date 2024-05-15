@@ -1,8 +1,8 @@
 import xml.dom.minidom
 
-
 class NFEXML:
-    def __init__(self):
+    def __init__(self, xml_file_path):
+        self.xml_file_path = xml_file_path
         self.chave = None
         self.cnpj_destinatario = None
         self.uf_destinatario = None
@@ -10,29 +10,23 @@ class NFEXML:
         self.razao_social = None
         self.endereco = None
         self.cep = None
+        self.ler_xml()
 
-    @staticmethod
-    def xml_leitor(xml_arquivo):
-        
-        dom = xml.dom.minidom.parse(xml_arquivo)
-        
-        xml_obj = NFEXML()  
-        
+    def ler_xml(self):
         try:
-            xml_obj.cnpj_destinatario = dom.getElementsByTagName('CNPJ')[0].firstChild.data
-            xml_obj.uf_destinatario = dom.getElementsByTagName('uf')[0].firstChild.data
-            xml_obj.mun = dom.getElementsByTagName('municipio')[0].firstChild.data
-            xml_obj.razao_social = dom.getElementsByTagName('razaoSocial')[0].firstChild.data
-            xml_obj.endereco = dom.getElementsByTagName('endereco')[0].firstChild.data
-            xml_obj.chave = dom.getElementsByTagName('documentoOrigem')[0].firstChild.data
-            xml_obj.cep = dom.getElementsByTagName('cep')[0].firstChild.data
-            
-            return xml_obj
-        
+            dom = xml.dom.minidom.parse(self.xml_file_path)
+            self.chave = dom.getElementsByTagName('chNFe')[0].firstChild.data
+            self.cnpj_destinatario = dom.getElementsByTagName('CNPJ')[0].firstChild.data
+            self.uf_destinatario = dom.getElementsByTagName('UF')[0].firstChild.data
+            self.mun = dom.getElementsByTagName('xMun')[0].firstChild.data
+            self.razao_social = dom.getElementsByTagName('xNome')[0].firstChild.data
+            self.endereco = dom.getElementsByTagName('xLgr')[0].firstChild.data
+            self.cep = dom.getElementsByTagName('CEP')[0].firstChild.data
         except Exception as e:
-            print("Erro ao processar XML:", e)
-            return None  # Retorna None em caso de erro
+            print(e)
 
-leitor = NFEXML.xml_leitor(r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj-Gnre_selenium\arquivo.xml')
-
-print(f'Chave do XML: {leitor.chave}')
+# Exemplo de uso:
+caminho_xml = r'C:\Users\vlsilva\Documents\PYTHON PROJETOS\python_fiscal\Darj_selenium\arquivo_xml\33230629020880000140550220003228301074967910-procNFe.xml'
+nf = NFEXML(caminho_xml)
+print(nf.chave)
+print(nf.cnpj_destinatario)
