@@ -33,6 +33,16 @@ def xml_leitor(xml_arquivo):
     xml_obj = XML()
     
     try:
+        # CNPJ EMITENTE
+        emit_element = dom.getElementsByTagName('emit')[0]
+        cnpj_element = emit_element.getElementsByTagName('CNPJ')[0]
+        cnpj_emitente = cnpj_element.firstChild.data
+        xml_obj.cnpj_emitente = cnpj_emitente
+
+        # INSCRICAO ESTADUAL DESTINATARIO
+        dest_element = dom.getElementsByTagName('dest')[0]
+        xml_obj.ie_dest = dest_element.getElementsByTagName('IE')[0].firstChild.data
+
         xml_obj.cnpj_destinatario = dom.getElementsByTagName('CNPJ')[0].firstChild.data
         xml_obj.uf_destinatario = dom.getElementsByTagName('UF')[0].firstChild.data
         xml_obj.mun = dom.getElementsByTagName('xMun')[0].firstChild.data

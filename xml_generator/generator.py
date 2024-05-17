@@ -89,7 +89,7 @@ def Gnre_Xml_Generator_Lote():
             t_contribuinteEmitente = ET.SubElement(t_dados_gnre, "contribuinteEmitente")
             t_identificacao = ET.SubElement(t_contribuinteEmitente, "identificacao")
             cnpj = ET.SubElement(t_identificacao, "CNPJ")
-            cnpj.text = cnpj_fornecedor # Documento de identificação do emitente
+            cnpj.text = xml_data.cnpj_emitente # Documento de identificação do emitente
             razaoSocial = ET.SubElement(t_contribuinteEmitente, "razaoSocial")
             razaoSocial.text = xml_data.razao_social 
             endereco = ET.SubElement(t_contribuinteEmitente, "endereco")
@@ -123,7 +123,7 @@ def Gnre_Xml_Generator_Lote():
             t_identificacao = ET.SubElement(t_contribuinteDestinatario, "identificacao")
             ie = ET.SubElement(t_identificacao, "IE")
             ins_estadual = df[df['Chave'] == xml_data.chave]['Insc. Estadual Dest.'].iloc[0]
-            ie.text = str(ins_estadual) # Inscrição estadual do contribuinte destinatário
+            ie.text = xml_data.ie_dest # Inscrição estadual do contribuinte destinatário
 
             t_camposExtras = ET.SubElement(item, "camposExtras")
             campoExtra1 = ET.SubElement(t_camposExtras, "campoExtra")
